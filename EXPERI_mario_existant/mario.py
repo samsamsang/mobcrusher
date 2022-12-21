@@ -4,7 +4,7 @@ pygame.init()
 
 WINDOW_WIDTH = 1200 #largeur fenêtre
 WINDOW_HEIGHT = 600 #huateur fenêtre 
-FPS = 20 #vitesse de chute initiale?? mauvais pour 0, 50 et 100
+FPS = 20 #vitesse de chute initiale?? mauvais pour 0, 50 et 100// nombre d'image par se conde (frame per secods)
 BLACK = (0, 0, 0) #indispensable à définir PK??
 GREEN = (0, 0, 0) #idem 
 ADD_NEW_FLAME_RATE = 5 #définit l'intervalle entre les boules de feu, structure en montagnes => aléatoire?
@@ -38,7 +38,7 @@ class Dragon:
     def __init__(self):
         self.dragon_img = pygame.image.load('dragon.png')
         self.dragon_img_rect = self.dragon_img.get_rect()
-        self.dragon_img_rect.width -= 10 #ne change rine si lignae cachée, dragon disparait pour grandes valeurs, conditionne la position du dragon  
+        self.dragon_img_rect.width -= 10 #ne change rine si lignae cachée, dragon disparait pour grandes valeurs, conditionne la position du dragon//donne lmes dim de l'objet  
         self.dragon_img_rect.height -= 10 #idem 
         self.dragon_img_rect.top = WINDOW_HEIGHT/2 #placement du dragon 
         self.dragon_img_rect.right = WINDOW_WIDTH
@@ -116,10 +116,10 @@ def game_over():
     canvas.blit(game_over_img, game_over_img_rect)
     while True:
         for event in pygame.event.get(): #obtenir des évènements de la liste d'attente 
-            if event.type == pygame.QUIT: #QUIT = cste d'énumération pour un type d'évènement ??
+            if event.type == pygame.QUIT: #QUIT = cste d'énumération pour un type d'évènement ??//appuie sur fermer (sinons ca se ferme pas)
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.KEYDOWN: #on capture le moment où la touche a été enfoncée et c'est une cste 
+            if event.type == pygame.KEYDOWN: #on capture le moment où la touche a été enfoncée et c'est une cste// on verifie si des touches ont été pressée 
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     sys.exit()
