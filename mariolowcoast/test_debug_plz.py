@@ -24,7 +24,7 @@ wheel=pygame.image.load('Settings.png')
 bw=bg.get_width()                   ## obtention de la dimension de l'image de base.
 bh=bg.get_height()
 clock=pygame.time.Clock()           ## céation de la fonction de temps.
-a=0                                 ## position de l'image de fond par rapport à l'écran.
+a=0                                 ## position du coin de l'image de fond par rapport à l'écran.
 b=-bh
 pygame.display.set_caption('mariolowcoast')## nom de la fenêtre pygame ouverte
 screen=pygame.display.set_mode((sw,sh))
