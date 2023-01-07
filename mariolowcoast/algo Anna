@@ -14,8 +14,8 @@ bg=pygame.transform.scale(bg, (int(bg.get_width()/4),int(bg.get_height()/4)))
 arrow=pygame.image.load('arrow.png')
 arrow=pygame.transform.scale(arrow, (int(arrow.get_width()/30),int(arrow.get_height()/30)))
 arrow=pygame.transform.rotate(arrow, 90)
-baguette=pygame.image.load('baguette.png')
-baguette=pygame.transform.rotate(baguette,90)
+baguette_img=pygame.image.load('baguette.png')
+baguette_img= pygame.transform.scale(baguette_img,(int(baguette_img.get_width()/12),int(baguette_img.get_height()/12)) )
 wheel=pygame.image.load('Settings.png')
 wheel_rect = wheel.get_rect(center = (50, 550))
 coeur = pygame.image.load('coeur.jpg')
@@ -211,6 +211,7 @@ class mob_pain():
     def __init__(self,x,y):
         self.x,self.y,self.vx,self.vy,self.count,self.ground,self.wallr,self.walll,self.r=[x,y,0,0,1,False,False,False,True]
         self.lanceur=pygame.image.load('lanceurdebaguette.png')
+        self.lanceur=pygame.transform.flip(self.lanceur,1,0)
         self.lanceur=pygame.transform.scale(self.lanceur,(int(self.lanceur.get_width()/13),int(self.lanceur.get_height()/13)) )
         self.lanceur_rect=self.lanceur.get_rect()
         self.lanceur_rect.center=(self.x,self.y)
@@ -260,8 +261,7 @@ class mob_pain():
     def _moveForward(self):       
         self.x += self.vx*0.5
         self.y +=self.vy*0.5
-        #lanceur_rect=lanceur.get_rect(center = (self.x,self.y))
-
+        self.lanceur_rect.center=(self.x,self.y)
     def _draw(self,screen):                          
         screen.blit(self.lanceur,self.lanceur_rect)
         
@@ -271,8 +271,8 @@ class bag():
         self.x=x
         self.y=y
         v=7
-        self.paing_img=arrow
-        self.paing_img_rect=self.paing_img.get_rect()
+        self.paing_img=baguette_img
+        self.paing_img_rect=baguette_img.get_rect() 
         self.paing_img_rect.center=(self.x,self.y)
         if self.x-mario.x<0:
             self.vx=v
