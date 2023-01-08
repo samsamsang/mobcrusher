@@ -8,7 +8,8 @@ sw=800                  ##définition des dimensions de base de l'écran
 sh=600
 
 
-bg=pygame.image.load('blabla2.png')  ##import des images et fichiers nécessaires.
+##import des images et fichiers nécessaires.
+bg=pygame.image.load('blabla2.png')  
 bg=pygame.transform.scale(bg, (int(bg.get_width()/4),int(bg.get_height()/4)))
 arrow=pygame.image.load('arrow.png')
 arrow=pygame.transform.scale(arrow, (int(arrow.get_width()/30),int(arrow.get_height()/30)))
@@ -16,7 +17,7 @@ arrow=pygame.transform.rotate(arrow, 90)
 baguette_img=pygame.image.load('baguette.png')
 baguette_img= pygame.transform.scale(baguette_img,(int(baguette_img.get_width()/12),int(baguette_img.get_height()/12)) )
 wheel=pygame.image.load('Settings.png')
-wheel_rect = wheel.get_rect(center = (50, 575))
+wheel_rect = wheel.get_rect(center = (50, 550))
 coeur = pygame.image.load('coeur.jpg')
 coeur = pygame.transform.scale(coeur,(int(arrow.get_width()/2),int(arrow.get_height()/2)) )
 coeur_rect = coeur.get_rect(center = (20, 50))
@@ -28,7 +29,7 @@ rat = pygame.transform.scale(rat,(int(rat.get_width()/8),int(rat.get_height()/8)
 
 
 mario_theme = pygame.mixer.Sound('mario_theme.wav') 
-lose_music = pygame.mixer.Sound('mario_dies.wav')
+music_over = pygame.mixer.Sound('mario_dies.wav')
 V = mario_theme.set_volume(.5) 
 
 mus_mess = pygame.font.Font('pol_jo.ttf', 20)
@@ -70,12 +71,12 @@ class move_screen():
     def _velocityr(self):
         global mario
         if mario.x>=475 :
-            if self.a>-11700:
+            if self.a>-11250:
                 if self.va>=-5:
                     self.va-=1
                 mario._brakex()
-            if self.a<=-11700 and mario.x<=780:
-                self.a=-11700
+            if self.a<=-11250 and mario.x<=780:
+                self.a=-11250
                 mario._velocityxr()
         elif   not mario.wallr :
             self.va=0
@@ -156,7 +157,7 @@ class mob_car():
         self.mobc_img=rat
         self.mobc_img_rect=self.mobc_img.get_rect()
         self.mobc_img_rect.center=(self.x,self.y)
-        self.mobc_img_rect.midbottom = (self.x,470)
+        self.mobc_img_rect.midbottom = (self.x,550)
 
     def _fall(self):
         if self.ground==False:
@@ -360,7 +361,7 @@ def Title():
         screen.blit(texttitle, textRecttitle)
 
 def Home():
-    global game_over, game_over, test_mario, object,mob,baguette,paing, score, mario, car, pain, pos, run, Playscreen, ground, option, t, life, music
+    global game_over, test_mario, object,mob,baguette,paing, score, mario, car, pain, pos, run, Playscreen, ground, option, t, life, music
     home = pygame.font.Font('pol_jo.ttf', 30)
     pygame.draw.rect(screen,'Blue',(420,480,120,50))
     texthome= home.render('Home',run,'Blue','Yellow')
@@ -371,15 +372,17 @@ def Home():
         if (pygame.mouse.get_pos()[0]>=420 and pygame.mouse.get_pos()[0]<=540) and (pygame.mouse.get_pos()[1]>=480 and pygame.mouse.get_pos()[1]<=530):
                             game_over = False 
                             Playscreen=True 
-                            test_mario=False 
-                            #mario,car,pain,pos,run,test_mario,Playscreen,ground,option,game_over,t, life, score, music, music_over=start()
+                            test_mario=False
+                            #option = False 
+                            mario,car,pain,pos,run,test_mario,Playscreen,ground,option,game_over,t, life, score, music=start()
                             object=[mario,pain,car]
                             mob=[car,pain]
                             paing=[pain]
                             baguette=[]
+                            print('home ok')
 
 def Retry():
-    global game_over, music_over, object,mob,paing,baguette,test_mario, score, mario, car, pain, pos, run, Playscreen, ground, option, t, life, music  
+    global game_over, object,mob,paing,baguette,test_mario, score, mario, car, pain, pos, run, Playscreen, ground, option, t, life, music  
     retry = pygame.font.Font('pol_jo.ttf', 30)
     pygame.draw.rect(screen,'Blue',(220,480,190,50))
     textretry= retry.render('Retry?',True,'Blue','Yellow')
@@ -389,14 +392,14 @@ def Retry():
     if pygame.mouse.get_pressed()[0]:
         print('pressed') 
         if  ((pygame.mouse.get_pos()[0]>=220 and pygame.mouse.get_pos()[0]<=400) and (pygame.mouse.get_pos()[1]>=480 and pygame.mouse.get_pos()[1]<=530)):
-            mario,car,pain,pos,run,test_mario,Playscreen,ground,option,game_over,t, life, score, music, music_over=start()
-            game_over=False
-            Playscreen = False 
+            mario,car,pain,pos,run,test_mario,Playscreen,ground,option,game_over,t, life, score, music=start()
+            Playscreen=False
             test_mario = True ##bouton retry
             object=[mario,pain,car]
             mob=[car,pain]
             paing=[pain]
             baguette=[]
+        
 
 def Vie():
     global life, game_over, test_mario   
@@ -408,6 +411,8 @@ def Vie():
 
 def Score():
     global score 
+    # global start_time 
+    # score = int(pygame.time.get_ticks()/1000) - start_time
     SCORE=pygame.font.Font('pol_jo.ttf',25)
     textScore=SCORE.render(f'Score = {score}',run,'Blue')
     textRectScore=textScore.get_rect(center = (400, 75))
@@ -421,11 +426,10 @@ def Score_go(): ##affichage score sur la page game over
     screen.blit(textScore,textRectScore)
 
 def game__over():
-    global music, music_over 
+    global music 
     if music:
         mario_theme.stop()
-        music_over = True 
-        lose_music.play()
+        music_over.play()
     screen.fill('Blue')
     go_mess = pygame.font.Font('pol_jo.ttf', 50)
     go_mess_surf = go_mess.render('Game Over', False, 'Red')
@@ -438,8 +442,9 @@ def game__over():
 
 ## Initialisation des valeurs 
 def start():
-    return([maria(),mob_car(400,50),mob_pain(300,50),move_screen(0),True,False,True,False,False,False,0, 3,0, True, False])
-mario,car,pain,pos,run,test_mario,Playscreen,ground,option,game_over,t, life, score, music, music_over=start()
+    return([maria(),mob_car(400,50),mob_pain(300,50),move_screen(0),True,False,True,False,False,False,0, 3,0, True])
+mario,car,pain,pos,run,test_mario,Playscreen,ground,option,game_over,t, life, score, music=start()
+best_score = 0
 
 def init_mario():
         pos._moveForward()     
@@ -467,10 +472,10 @@ def wallgame():
     else:
             mario.wallr=False
     if pos.a>=0:
-            pos.a=0
+            pos.a=0 
             pos.va=0
-    if pos.a<=-11700:
-            pos.a=-11700
+    if pos.a<=-11250:
+            pos.a=-11250
             pos.va=0
 def action():
         global pos, mario
@@ -491,17 +496,24 @@ def action():
                 mario._jump()
                 mario.sumersolt-=1
 
-# def crush():
-#         if self.mario_img_rect.midbottom == mob_car.mobc_img_rect.midtop :
-#             mob_car.mob_img_rect.remove()
-#         if self.mario 
+# def collisions():
+#     global mario,mob
+#     for mechant in mob:
+#         for perso in mechant():
+#             perso_centre=perso.rect.centery
+#             perso_top=mob.rect.top
+#             mario_bottom=mario.bottom
+#             if perso_top<mario_bottom<perso_centre and mario.y>=0:
+#                 mario.y=-25
+#                 perso.kill()
+
 
 object=[mario,pain,car]
 mob=[car,pain]
 paing=[pain]
 baguette=[]
 
-best_score = 0 
+
 
 while  run:
     
@@ -514,7 +526,7 @@ while  run:
                 mario_theme.play()
             elif not music:
                 mario_theme.stop()
-            clock.tick(120)                     ## définition de l'écran d'accueil
+            clock.tick(60)                     ## définition de l'écran d'accueil
             Begin()
             Title()
             gotooption()
@@ -534,28 +546,25 @@ while  run:
         pygame.display.flip()
 
     if test_mario:   ##lancement du jeu
-        if music:
-                mario_theme.play()
-        elif not music:
-            mario_theme.stop()
         init_mario() 
         Vie()
         Score()
-        clock.tick(120)
+        clock.tick(60)
         score += 1  
         t+=1 
         pygame.display.flip() 
         wallgame()
-        action() 
+        action()
+        #collisions()
+
         
         
         for o in object:   
             if  o.ground==False:      ##definition du sol et des fonctions nécessaires a la chute et au saut
                 o._fall()
-            if o.y<470:
+            if o.y<550:
                 o.ground= False
             else:
-            
                 o._ground()
         for i,o in enumerate(mob) :
             dx=o.x-mario.x
@@ -565,9 +574,11 @@ while  run:
                 
             else:
                 o._walk(t)
-            if max(dx**2,dy**2)<=(mario.mario_img.get_width()/2)**2:
+            if max(dx**2,dy**2)<=(mario.mario_img.get_width()/2)**2 and mario.vy>0:
+                mario.y=-25
+                o.remove()
+            if max(dx**2,dy**2)<=(mario.mario_img.get_width()/2)**2 and mario.vy==0:
                 life -= 1
-                                    
 
         for o in paing:
             if o.count%60==0:
@@ -578,13 +589,28 @@ while  run:
             if max(dx**2,dy**2)<=(mario.mario_img.get_width()/2)**2  :
                 life -= 1
                 baguette.remove(o)
-
         if life <= 0:
             game_over = True
             test_mario=False
-
     if game_over:
         game__over()
         pygame.display.flip()
     if score > best_score:
         best_score = score   
+
+
+
+# def collisions(self):
+#     collisions_mobs=pygame.sprite.spritecollide(self.mario.sprite,self.lanceur, False)
+#     if collisions_mobs:
+#         for mob in collisions_mobs:
+#             mob_centre=mob.rect.centery
+#             mob_top=mob.rect.top
+#             mario_bottom=self.mario.sprite.rect.bottom
+#             if mob_top<mario_bottom<mob_centre and self.mario.sprite.direction.y>=0:
+#                 self.mario.sprite.direction.y=-25
+#                 mob.kill()
+
+
+    #test collision
+    
