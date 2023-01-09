@@ -349,7 +349,7 @@ def gotooption(): ##passage aux options
     screen.blit(wheel, wheel_rect)
     global option, Playscreen
     if pygame.mouse.get_pressed()[0]:
-                    if (pygame.mouse.get_pos()[0]>=40-wheel.get_width() and pygame.mouse.get_pos()[0]<=40+wheel.get_width()) and(pygame.mouse.get_pos()[1]>=520-wheel.get_height() and pygame.mouse.get_pos()[1]<=520+wheel.get_height()):
+                    if (pygame.mouse.get_pos()[0]>=50-wheel.get_width() and pygame.mouse.get_pos()[0]<=50+wheel.get_width()) and(pygame.mouse.get_pos()[1]>=575-wheel.get_height() and pygame.mouse.get_pos()[1]<=575+wheel.get_height()):
                         Playscreen=False
                         option=True       
                         
