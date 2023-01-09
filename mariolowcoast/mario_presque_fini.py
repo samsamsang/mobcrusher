@@ -1,5 +1,4 @@
-import  pygame, random
-from pygame.image import load               ## import des modules de base nécessare au jeu
+import  pygame, random ## import des modules de base nécessare au jeu
 
 pygame.init()           ##lancement de pygame
 
@@ -586,8 +585,8 @@ while  run:
         pygame.display.flip() 
         wallgame()
         action() 
-        #collisions
-        if not mario.ground:
+        
+        if not mario.ground: #collisions
             mario._fall()
         if mario.y<sol_haut:
             mario.ground=False
