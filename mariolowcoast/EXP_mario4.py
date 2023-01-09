@@ -32,7 +32,7 @@ maison_rect = maison.get_rect(center =(750, 50))
 
 mario_theme = pygame.mixer.Sound('mario_theme.wav') 
 lose_music = pygame.mixer.Sound('mario_dies.wav')
-success = pygame.mixer.Sound('success_music.wav')
+success = pygame.mixer.Sound('mario_dies.wav')
 V = mario_theme.set_volume(.5) 
 
 musbison_mess = pygame.font.Font('pol_jo.ttf', 15)
@@ -71,6 +71,7 @@ bh=bg.get_height()
 clock=pygame.time.Clock()           ## céation de la fonction de temps.
 a=0                                 ## position de l'image de fond par rapport à l'écran.
 b=-bh
+lv=1
 pygame.display.set_caption('MarioLowCost')## nom de la fenêtre pygame ouverte
 screen=pygame.display.set_mode((sw,sh))
 
@@ -312,12 +313,6 @@ def Screen(a,b):
 a=0
 b=600-bh
 
-def pop_mobs():
-    for r in mech_rat:
-        r._draw(screen)
-    for l in mech_lanc:
-        l._draw(screen)
-    pygame.display.update()
 
 def Begin():
         screen.blit(bg,(a,b))
@@ -395,7 +390,9 @@ def back_to_home():
                             mario,car,pain,pos,run,test_mario,Playscreen,ground,option,game_over,t, life, score, count_rat, count_lanc=start()
                             test_mario=False
                             Playscreen=True
-                              
+def reset_list():
+    global  mob, paing, baguette
+    mob,paing,baguette=[[car,pain],[pain],[]]                          
 
 def Home():
     global game_over, count_rat, count_lanc, music_over, test_mario, object, mob, baguette, paing, score, mario, car, pain, pos, run, Playscreen, ground, option, t, life, music
@@ -409,12 +406,7 @@ def Home():
         if (pygame.mouse.get_pos()[0]>=420 and pygame.mouse.get_pos()[0]<=540) and (pygame.mouse.get_pos()[1]>=480 and pygame.mouse.get_pos()[1]<=530):
                             mario,car,pain,pos,run,test_mario,Playscreen,ground,option,game_over,t, life, score, count_rat, count_lanc=start()
                             game_over = False 
-                            Playscreen=True 
-                            test_mario=False 
-                            object=[mario,pain,car]
-                            mob=[car,pain]
-                            paing=[pain]
-                            baguette=[]
+                            reset_list()
 
 def Retry():
     global game_over, count_rat, count_lanc, music_over, object,mob,paing,baguette,test_mario, score, mario, car, pain, pos, run, Playscreen, ground, option, t, life, music  
@@ -429,10 +421,7 @@ def Retry():
             mario,car,pain,pos,run,test_mario,Playscreen,ground,option,game_over,t, life, score, count_rat, count_lanc=start()
             Playscreen = False 
             test_mario = True 
-            object=[mario,pain,car]
-            mob=[car,pain]
-            paing=[pain]
-            baguette=[]
+            reset_list()
 
 def Vie():
     global life, game_over, test_mario   
@@ -494,18 +483,20 @@ def well_done(): ##problème au niveau de la position de Mario
 ## Initialisation des valeurs 
 def start():
     return([maria(),mob_car(400,50),mob_pain(300,50),move_screen(0),True,False,True,False,False,False,0, 3, 0, 0, 0])
-mario,car,pain,pos,run,test_mario,Playscreen,ground,option,game_over,t, life, score, count_rat, count_lanc=start()
+
 
 def init_mario():
         pos._moveForward()     
+        pos._movemob()
         screen.blit(bg,(pos.a,b))
         mario._moveForward()
-        car._moveForward()
-        pain._moveForward()
-        pos._movemob()
+        for o in mob:
+            o._moveForward()
+            o._draw(screen)
+        
+        
         mario._draw(screen)
-        pain._draw(screen)
-        car._draw(screen)
+        
         for o in baguette:
             o._moveForward()
             o._draw(screen)
@@ -545,22 +536,22 @@ def action():
             elif mario.ground==False and mario.sumersolt>0 and mario.count>30:
                 mario._jump()
                 mario.sumersolt-=1
+def gener_mob(t,lv):
+    if (t//lv)%100==0:
+        mob.append(mob_car(random.randrange(0, 1100), 450))
+    if (t//lv)%300==0:
+        mob.append(mob_pain(random.randrange(0, 11100),450))
+        paing.append(mob[-1])
 
 
-object=[mario,pain,car]
-mob=[car,pain]
-paing=[pain]
-baguette=[]
+
+
 mech_rat = []
 mech_lanc = []
+mario,car,pain,pos,run,test_mario,Playscreen,ground,option,game_over,t, life, score, count_rat, count_lanc=start()
+reset_list()
 
-pos_rat = []
-for i in range(30):
-    pos_rat[i] = random.randrange(0, 11100)
 
-pos_lanc = []
-for i in range(30):
-    pos_lanc[i] = random.randrange(0, 11100)
 
 best_score = 0 
 
@@ -606,24 +597,26 @@ while  run:
         Vie()
         Score()
         back_to_home()
+        gener_mob(t,lv)
         clock.tick(120)
         count_rat += 1
         count_lanc += 1
         score += 1  
         t+=1 
-        for i in range[30]:
-            if count_rat%10 == 0:
-                mech_rat.append(mob_car(pos_rat[i], sol_haut))
-            if count_lanc%10 == 0:
-                mech_lanc.append(mob_pain(pos_lanc[i], sol_haut))
+ 
         pygame.display.flip() 
         wallgame()
         action() 
         well_done()
-         
+        if not mario.ground:
+            mario._fall()
+        if mario.y<sol_haut:
+            mario.ground=False
+        else:
+            mario._ground()
         
-        for o in object:   
-            if  o.ground==False:      ##definition du sol et des fonctions nécessaires a la chute et au saut
+        for o in mob:   
+            if   not o.ground:      ##definition du sol et des fonctions nécessaires a la chute et au saut
                 o._fall()
             if o.y<sol_haut:
                 o.ground= False
@@ -661,4 +654,4 @@ while  run:
         pygame.display.flip()
 
     if score > best_score:
-        best_score = score   
+        best_score = score    
