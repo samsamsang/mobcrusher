@@ -55,7 +55,8 @@ off_rect = off_surf.get_rect(center=(600, 170))
 
 bw=bg.get_width()                   ## obtention de la dimension de l'image de base.
 bh=bg.get_height()
-clock=pygame.time.Clock()           ## céation de la fonction de temps.
+clock=pygame.time.Clock()
+frm=0.8        ## céation de la fonction de temps.
 a=0                                 ## position de l'image de fond par rapport à l'écran.
 b=-bh
 pygame.display.set_caption('mariolowcoast')## nom de la fenêtre pygame ouverte
@@ -100,16 +101,16 @@ class move_screen():
     def _brake(self):
         self.va=0
     def _moveForward(self):
-        
-        self.a+=self.va*0.5
+        global frm
+        self.a+=self.va*frm
     def _movemob(self):
-        global pain, car
-        pain.x+=self.va*0.5
-        car.x+=self.va*0.5
+        global pain, car, frm
+        pain.x+=self.va*frm
+        car.x+=self.va*frm
 
 class maria():                  ## création du personnage
     def __init__(self):         ## paramètres de base du personnage (position, image, vitesse)
-        self.x,self.y,self.vx,self.vy,self.r,self.jump,self.sumersolt,self.count,self.ground,self.wallr,self.walll=[150,50,0,0,True,1,1,1,False,False,False]
+        self.x,self.y,self.vx,self.vy,self.vxf,self.r,self.jump,self.sumersolt,self.count,self.ground,self.wallr,self.walll=[150,50,0,0,0,True,1,1,1,False,False,False]
         
         self.mario_img = pygame.image.load('maryo.png')
         self.mario_img_rect = self.mario_img.get_rect()
@@ -135,7 +136,7 @@ class maria():                  ## création du personnage
         self.vy-=10
         
     def _ground(self):
-        self.ground,self.vy,self.jump,self.sumersolt,self.count=[True,0,1,1,1]
+        self.ground,self.vy,self.vxf,self.jump,self.sumersolt,self.count=[True,0,0,1,1,1]
         
         
     def _fall(self):
@@ -145,9 +146,10 @@ class maria():                  ## création du personnage
     def _draw(self,screen):                             ##apparition de l'image à l'écran
         screen.blit(self.mario_img,self.mario_img_rect)
 
-    def _moveForward(self):         ##actualisation automatique de la postion du personnage en fonction de la vitesse
-        self.x += self.vx*0.5
-        self.y +=self.vy*0.5
+    def _moveForward(self):        ##actualisation automatique de la postion du personnage en fonction de la vitesse
+        global frm
+        self.x += self.vx*frm+self.vxf*frm
+        self.y +=self.vy*frm
         self.mario_img_rect.center=(self.x,self.y)
 
 class mob_car():
@@ -167,6 +169,7 @@ class mob_car():
         self.ground=True
         if self.vy>0:
             self.vy=0
+            
     def _brakey(self):
         if self.ground==True:
             if self.vy>0:
@@ -200,14 +203,14 @@ class mob_car():
             self.vx=0
         if self.walll and self.vx<0:
             self.vx=0
-    def _moveForward(self):       
-        self.x += self.vx*0.5
-        self.y +=self.vy*0.5
+    def _moveForward(self):   
+        global frm    
+        self.x += self.vx*frm
+        self.y +=self.vy*frm
         self.mobc_img_rect.center=(self.x,self.y)
     def _draw(self,screen):                             
         screen.blit(self.mobc_img,self.mobc_img_rect)
-    def __delete__(self,t):
-        self.mobc_img.remove(t)
+
 
 
 class mob_pain():
@@ -261,9 +264,10 @@ class mob_pain():
             self.vx=0
         if self.walll and self.vx<0:
             self.vx=0
-    def _moveForward(self):       
-        self.x += self.vx*0.5
-        self.y +=self.vy*0.5
+    def _moveForward(self):  
+        global frm     
+        self.x += self.vx*frm
+        self.y +=self.vy*frm
         self.lanceur_rect.center=(self.x,self.y)
     def _draw(self,screen):                          
         screen.blit(self.lanceur,self.lanceur_rect)
@@ -450,15 +454,16 @@ mario,car,pain,pos,run,test_mario,Playscreen,ground,option,game_over,t, life, sc
 best_score = 0
 
 def init_mario():
+        global mob
         pos._moveForward()     
+        pos._movemob()
         screen.blit(bg,(pos.a,b))
         mario._moveForward()
-        car._moveForward()
-        pain._moveForward()
-        pos._movemob()
+        for o in mob:
+            o._moveForward()
+            o._draw(screen)
         mario._draw(screen)
-        pain._draw(screen)
-        car._draw(screen)
+        
         for o in baguette:
             o._moveForward()
             o._draw(screen)
@@ -484,9 +489,16 @@ def action():
         global pos, mario
         keys=pygame.key.get_pressed() ## c'est une fonction qui verifie si une clé est pressée, on puet, en appelant précisement un clé, la faire renvoyer un booléen
         if keys[pygame.K_RIGHT]  :##mouvmeent du personnage de gauche à droite.
-            pos._velocityr() 
+            pos._velocityr()
+            if not mario.r:
+                mario.r=True
+                mario.mario_img=pygame.transform.flip(mario.mario_img, 1, 0)
+
         elif keys[pygame.K_LEFT] :
             pos._velocityl()
+            if mario.r:
+                mario.r=False
+                mario.mario_img=pygame.transform.flip(mario.mario_img, 1, 0)
         elif mario.y>=470:
             pos._brake()
             mario._brakex()
@@ -495,23 +507,14 @@ def action():
                 mario.y-=10
                 mario._jump()
                 mario.jump-=1
-            elif mario.ground==False and mario.sumersolt>0 and mario.count>30:
+            elif mario.ground==False and mario.sumersolt>0 and mario.count>10:
                 mario._jump()
                 mario.sumersolt-=1
 
-# def collisions():
-#     global mario,mob
-#     for mechant in mob:
-#         for perso in mechant():
-#             perso_centre=perso.rect.centery
-#             perso_top=mob.rect.top
-#             mario_bottom=mario.bottom
-#             if perso_top<mario_bottom<perso_centre and mario.y>=0:
-#                 mario.y=-25
-#                 perso.kill()
 
 
-object=[mario,pain,car]
+
+
 mob=[car,pain]
 paing=[pain]
 baguette=[]
@@ -529,7 +532,7 @@ while  run:
                 mario_theme.play()
             elif not music:
                 mario_theme.stop()
-            clock.tick(60)                     ## définition de l'écran d'accueil
+            clock.tick(120)                     ## définition de l'écran d'accueil
             Begin()
             Title()
             gotooption()
@@ -558,18 +561,20 @@ while  run:
         pygame.display.flip() 
         wallgame()
         action()
-        #collisions()
-
-        
-        
-        for o in object:   
+        #collisions()  
+        if  mario.ground==False:      ##definition du sol et des fonctions nécessaires a la chute et au saut
+            mario._fall()
+        if mario.y<550:
+            mario.ground= False
+        else:
+            mario._ground()
+        for o in mob :
             if  o.ground==False:      ##definition du sol et des fonctions nécessaires a la chute et au saut
                 o._fall()
             if o.y<550:
                 o.ground= False
             else:
                 o._ground()
-        for i,o in enumerate(mob) :
             dx=o.x-mario.x
             dy=o.y-mario.y
             if dx**2<=20000:
@@ -578,12 +583,22 @@ while  run:
             else:
                 o._walk(t)
             if max(dx**2,dy**2)<=(mario.mario_img.get_width()/2)**2 and mario.vy>0:
-                mario.y=-25
+                mario.y-=25
+                mario.vy=-5
                 mob.remove(o)
-                object.remove(o)
-                mob_car.__delete__(o)
+                
+                
+                pygame.display.flip()
+                
             elif max(dx**2,dy**2)<=(mario.mario_img.get_width()/2)**2 :
-                mario.y=-25
+                mario.y-=10
+                mario.vy=-5
+                if o.r==True:
+                    mario.x+=5
+                    mario.vxf=10
+                else:
+                    mario.x-=5
+                    mario.vxf=-10
                 life -= 1
 
 
@@ -604,19 +619,4 @@ while  run:
         pygame.display.flip()
     if score > best_score:
         best_score = score   
-
-
-
-# def collisions(self):
-#     collisions_mobs=pygame.sprite.spritecollide(self.mario.sprite,self.lanceur, False)
-#     if collisions_mobs:
-#         for mob in collisions_mobs:
-#             mob_centre=mob.rect.centery
-#             mob_top=mob.rect.top
-#             mario_bottom=self.mario.sprite.rect.bottom
-#             if mob_top<mario_bottom<mob_centre and self.mario.sprite.direction.y>=0:
-#                 self.mario.sprite.direction.y=-25
-#                 mob.kill()
-
-
     #test collision
