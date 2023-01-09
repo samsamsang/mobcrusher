@@ -1,2 +1,3 @@
 # mobcrusher
-mario lowcost
+Notre jeu, intitulé MobCrusher, s'inspire trés fortement du jeu d'arcades Mario. Toutefois, contrairement à son mentor, pas de plateforme ou de gouffre à passer mais de redoutables rats et lanceurs de baguettes (équivalents des boules de feu) à esquiver - d'où le nom du jeu. Le jeu comporte un menu "options" permettant d'activer/désactiver la musique, un tantinet criarde. Trois niveaux sont accessibles, chacun différant par la hauteur de laquelle les mobs tombent du ciel. Le score varie également en fonction du niveau choisi. Les points sont rajoutés pour chaque mob éliminé, cela étant le cas lorsque le personnage lui saute dessus. Le personnage possède trois vies; il en perd une dès qu'il est touché par un lanceur, un rat ou une baguette. 
+Bonne chance et amusez-vous bien!
