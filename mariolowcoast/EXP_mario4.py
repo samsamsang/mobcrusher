@@ -28,40 +28,50 @@ rat = pygame.image.load('rat.png')
 rat = pygame.transform.scale(rat,(int(rat.get_width()/8),int(rat.get_height()/8))) 
 maison = pygame.image.load('maison.png')
 maison = pygame.transform.scale(maison, (int(maison.get_width()/5),int(maison.get_height()/5)))
-maison_rect = maison.get_rect(center =(750, 50))
+maison_rect = maison.get_rect(center =(40, 100))
 
 mario_theme = pygame.mixer.Sound('mario_theme.wav') 
 lose_music = pygame.mixer.Sound('mario_dies.wav')
 success = pygame.mixer.Sound('mario_dies.wav')
 V = mario_theme.set_volume(.5) 
 
-musbison_mess = pygame.font.Font('pol_jo.ttf', 15)
-musbison_mess_surf = musbison_mess.render('La musique vous insupporte ?  ( comprehensible ) Desactivez-la !', False, 'Green', 'Red')
+musbison_mess = pygame.font.Font('pol_jo.ttf', 16)
+musbison_mess_surf = musbison_mess.render('La musique vous insupporte ?  (comprehensible) Desactivez-la !', False, 'Black')
 musbison_mess_rect = musbison_mess_surf.get_rect(center = (400, 300))
 
-musbisoff_mess = pygame.font.Font('pol_jo.ttf', 15)
-musbisoff_mess_surf = musbisoff_mess.render('La musique vous manque ?  ( moins comprehensible ) Activez-la !', False, 'Green', 'Red')
+musbisoff_mess = pygame.font.Font('pol_jo.ttf', 16)
+musbisoff_mess_surf = musbisoff_mess.render('La musique vous manque ? (moins comprehensible) Activez-la !', False, 'Black')
 musbisoff_mess_rect = musbisoff_mess_surf.get_rect(center = (400, 300))
 
 mus_mess = pygame.font.Font('pol_jo.ttf', 20)
-mus_mess_surf = mus_mess.render('Cliquer pour activer/desactiver le son', False, 'Red', 'Blue')
+mus_mess_surf = mus_mess.render('Cliquer pour activer/desactiver le son', False, 'Black')
 mus_mess_rect = mus_mess_surf.get_rect(center = (400, 80))
 
 son_mess = pygame.font.Font('pol_jo.ttf', 25)
-son_mess_surf = son_mess.render('Son active', False, 'Blue', 'Red')
+son_mess_surf = son_mess.render('Son active', False, 'Blue')
 son_mess_rect = son_mess_surf.get_rect(center = (400, 120))
 
 soff_mess = pygame.font.Font('pol_jo.ttf', 25)
-soff_mess_surf = soff_mess.render('Son desactive', False, 'Blue', 'Red')
+soff_mess_surf = soff_mess.render('Son desactive', False, 'Blue')
 soff_mess_rect = soff_mess_surf.get_rect(center = (400, 220)) 
 
-on = pygame.font.Font('pol_jo.ttf', 30)
-on_surf = on.render('ON', False, 'Yellow', 'Blue')
+on = pygame.font.Font('pol_jo.ttf', 30) #ensuite fct def level, clic reprendre condition fonction quiaccueil av 
+on_surf = on.render('ON', False, 'Black', 'Blue') 
 on_rect = on_surf.get_rect(center=(200, 170))
 
 off = pygame.font.Font('pol_jo.ttf', 30)
-off_surf = off.render('OFF', False, 'yellow', 'Blue')
+off_surf = off.render('OFF', False, 'Black', 'Blue')
 off_rect = off_surf.get_rect(center=(600, 170))
+
+level1 = pygame.font.Font('pol_jo.ttf', 25)
+level1_surf = level1.render('1', False, 'Black', 'Blue') 
+level1_rect = level1_surf.get_rect(center=(225, 515))
+level2 = pygame.font.Font('pol_jo.ttf', 25)
+level2_surf = level2.render('2', False, 'Black', 'Blue') 
+level2_rect = level2_surf.get_rect(center=(425, 515))
+level3 = pygame.font.Font('pol_jo.ttf', 25)
+level3_surf = level3.render('3', False, 'Black', 'Blue') 
+level3_rect = level3_surf.get_rect(center=(625, 515))
 
 music = True 
 
@@ -328,6 +338,11 @@ def Begin():
         score_rect = score_surf.get_rect(center = (190, 60))
         screen.blit(score_surf, score_rect) 
 
+        choix_niv_text = pygame.font.Font('pol_jo.ttf', 25)
+        choix_niv_surf = choix_niv_text.render("choisir le niveau", False, 'Black')
+        choix_niv_rect = choix_niv_surf.get_rect(center = (400, 440))
+        screen.blit(choix_niv_surf, choix_niv_rect)
+
 def quitaccueil():
     global Playscreen
     global test_mario
@@ -366,6 +381,30 @@ def Option():
                 screen.blit(musbison_mess_surf, musbison_mess_rect)
                 music = True 
 
+def choix_level():
+    global lv
+    pygame.draw.rect(screen,'Blue',(200,490, 50, 50))
+    screen.blit(level1_surf, level1_rect)
+    pygame.draw.rect(screen,'Blue',(400,490, 50, 50))
+    screen.blit(level2_surf, level2_rect)
+    pygame.draw.rect(screen,'Blue',(600,490, 50, 50))
+    screen.blit(level3_surf, level3_rect)
+    if (pygame.mouse.get_pressed()[0]):
+        if (pygame.mouse.get_pos()[0]>=150 and pygame.mouse.get_pos()[0]<=250) and(pygame.mouse.get_pos()[1]>=440 and pygame.mouse.get_pos()[1]<=540):
+                lv=1
+                screen.blit(level1_surf, level1_rect)
+        if (pygame.mouse.get_pos()[0]>=350 and pygame.mouse.get_pos()[0]<=450) and(pygame.mouse.get_pos()[1]>=440 and pygame.mouse.get_pos()[1]<=540):
+                lv=2
+                screen.blit(level2_surf, level2_rect)
+        if (pygame.mouse.get_pos()[0]>=550 and pygame.mouse.get_pos()[0]<=650) and(pygame.mouse.get_pos()[1]>=440 and pygame.mouse.get_pos()[1]<=540):
+                lv=3
+                screen.blit(level3_surf, level3_rect)
+
+def affiche_level():
+    level= pygame.font.Font('pol_jo.ttf', 25)
+    level_surf = level.render(f"level = {lv}", False, 'Black')
+    level_rect=level_surf.get_rect(center = (650, 60))
+    screen.blit(level_surf, level_rect)
 
 def gotoaccueil():
     screen.blit(arrow,(35,480))
@@ -570,7 +609,9 @@ while  run:
             Begin()
             Title()
             gotooption()
-            quitaccueil()                     
+            quitaccueil()
+            choix_level()
+            affiche_level()                   
            
             pygame.display.flip()        ## raffraîchissement de l'image, cela mets à jours tout ce qui apparait à l'écran.
     
@@ -594,6 +635,7 @@ while  run:
             mario_theme.stop() 
         #pop_mobs()
         init_mario() 
+        affiche_level()
         Vie()
         Score()
         back_to_home()
@@ -654,4 +696,4 @@ while  run:
         pygame.display.flip()
 
     if score > best_score:
-        best_score = score    
+        best_score = score   
