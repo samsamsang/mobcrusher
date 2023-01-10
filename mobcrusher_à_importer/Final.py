@@ -430,11 +430,7 @@ def Score(): #affichage du score en direct
     screen.blit(textScore,textRectScore)
 
 def game__over(): ##définition de la page game over
-    global music, music_over 
-    if music:
-        mario_theme.stop()
-        music_over = True 
-        lose_music.play()
+    global music, music_over
     screen.fill('Blue')
     go_mess = pygame.font.Font('pol_jo.ttf', 50)
     go_mess_surf = go_mess.render('Game Over', False, 'Red')
@@ -653,6 +649,10 @@ while  run:
 
         if life <= 0:
             game_over = True
+            if music:
+                mario_theme.stop()
+                music_over = True 
+                lose_music.play()
             test_mario=False
 
     if game_over:
