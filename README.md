@@ -4,3 +4,4 @@ Bonne chance et amusez-vous bien!
 
 MODE D'EMPLOI:
 ouvrir le fichier mobcrusher_à_importer dans vs code, ouvrir le code final.py et lancer le code, le jeu se lancera.
+utiliser les boutons directionnels ainsi que la barre d'espace pour se déplacer et de la souris pour cliquer sur les différents boutons (menu et options)
