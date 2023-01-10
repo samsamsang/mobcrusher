@@ -3,7 +3,7 @@ import  pygame, random ## import des modules de base nécessare au jeu
 pygame.init()           ##lancement de pygame
 
 
-sw=800                  ##définition des dimensions de base de l'écran
+sw=800                  ##définition des dimensions de base de l'écran (sw=hauteur et sh=largeur)
 sh=600
 sol_haut = 550          ##définition de la hauteur du sol 
 lv=1                    ##niveau par défaut
@@ -12,14 +12,14 @@ parachute = [360, 410, 460] ##hauteur à laquelle apparaissent les mobs en fonct
 
 #import des fichiers nécessaires 
 bg=pygame.image.load('map.png')  ##import des images 
-bg=pygame.transform.scale(bg, (int(bg.get_width()/4),int(bg.get_height()/4)))
+bg=pygame.transform.scale(bg, (int(bg.get_width()/4),int(bg.get_height()/4))) #réduction de l'image
 arrow=pygame.image.load('arrow.png')
 arrow=pygame.transform.scale(arrow, (int(arrow.get_width()/30),int(arrow.get_height()/30)))
-arrow=pygame.transform.rotate(arrow, 90)
+arrow=pygame.transform.rotate(arrow, 90) #rotation de l'image
 baguette_img=pygame.image.load('baguette.png')
 baguette_img= pygame.transform.scale(baguette_img,(int(baguette_img.get_width()/12),int(baguette_img.get_height()/12)) )
 wheel=pygame.image.load('Settings.png')
-wheel_rect = wheel.get_rect(center = (50, 575))
+wheel_rect = wheel.get_rect(center = (50, 575)) #positionnement de l'image
 coeur = pygame.image.load('coeur.png')
 coeur = pygame.transform.scale(coeur,(int(arrow.get_width()/2),int(arrow.get_height()/2)) )
 coeur_rect = coeur.get_rect(center = (20, 50))
@@ -37,7 +37,7 @@ lose_music = pygame.mixer.Sound('mario_dies.wav')
 success = pygame.mixer.Sound('mario_dies.wav')
 V = mario_theme.set_volume(.5) 
 #création des zones de texte 
-musbison_mess = pygame.font.Font('pol_jo.ttf', 16)
+musbison_mess = pygame.font.Font('pol_jo.ttf', 16) #choix de la police et de la taille de l'écriture
 musbison_mess_surf = musbison_mess.render('La musique vous insupporte ?  (comprehensible) Desactivez-la !', False, 'Black')
 musbison_mess_rect = musbison_mess_surf.get_rect(center = (400, 300))
 
@@ -57,7 +57,7 @@ soff_mess = pygame.font.Font('pol_jo.ttf', 25)
 soff_mess_surf = soff_mess.render('Son desactive', False, 'Blue')
 soff_mess_rect = soff_mess_surf.get_rect(center = (400, 220)) 
 
-on = pygame.font.Font('pol_jo.ttf', 30) #ensuite fct def level, clic reprendre condition fonction quiaccueil av 
+on = pygame.font.Font('pol_jo.ttf', 30)
 on_surf = on.render('ON', False, 'Black', 'Blue') 
 on_rect = on_surf.get_rect(center=(200, 170))
 
@@ -80,7 +80,7 @@ music = True
 bw=bg.get_width()                   ## obtention de la dimension de l'image de base
 bh=bg.get_height()
 clock=pygame.time.Clock()           ## céation de la fonction de temps
-frm=0.5        
+frm=0.5                             ## variable qui sera notamment utilisée pour la vitesse
 a=0                                 ##position du fond d'écran 
 b=600-bh
 
@@ -195,7 +195,7 @@ class mob_rat(): ##définition des rats
         if self.ground==True:
             if self.vy>0:
                 self.vy=0
-    def _follow(self,t): #à la poursuite de Maria
+    def _follow(self,t): #à la poursuite de Mario
         if self.x-mario.x<-3:
             if self.r==False:
                 self.mobc_img=pygame.transform.flip(self.mobc_img,1,0)
@@ -337,7 +337,7 @@ def Title(): #titre du jeu
         textRecttitle.center= (400,250)           
         screen.blit(texttitle, textRecttitle)
 
-def choix_level(): ##définition des boutons pour le choix du niveau 
+def choix_level(): ##définition des boutons pour le choix du niveau (lv) pouvant prendre les valeurs 1,2 ou 3
     global lv
     pygame.draw.rect(screen,'Blue',(200,490, 50, 50))
     screen.blit(level1_surf, level1_rect)
@@ -498,7 +498,7 @@ def init_mario():
         for o in baguette:
             o._moveForward()
             o._draw(screen)
-def wallgame():
+def wallgame(): #murs de la map
     global pos, mario
     if mario.x<=0:
             mario.walll=True
@@ -618,15 +618,15 @@ while  run:
                 o._follow(t)   
             else:
                 o._walk(t)
-            if max(dx**2,dy**2)<=(mario.mario_img.get_width()/2)**2 and mario.vy>0:
-                mario.y-=25
+            if max(dx**2,dy**2)<=(mario.mario_img.get_width()/2)**2 and mario.vy>0: #mario saute sur un mob
+                mario.y-=25 #mario saute en arrière
                 mario.vy=-5
-                mob.remove(o)
-                score += S[lv -1]
+                mob.remove(o) #on enlève le mob du jeu
+                score += S[lv -1] #on ajoute les points en fonction du niveau
 
                 pygame.display.flip()
 
-            elif max(dx**2,dy**2)<=(mario.mario_img.get_width()/2)**2 :
+            elif max(dx**2,dy**2)<=(mario.mario_img.get_width()/2)**2 : #un mob rentre dans mario
                 mario.y-=10
                 mario.vy=-5
                 if o.r==True:
@@ -635,12 +635,12 @@ while  run:
                 else:
                     mario.x-=10
                     mario.vxf=-5
-                life -= 1
+                life -= 1 #perte d'une vie
                                     
         for o in paing:
             if o.count%60==0:
                 baguette.append(bag(o.x,o.y))
-        for o in baguette:
+        for o in baguette: #collisions avec les baguettes
             dx=o.x-mario.x
             dy=o.y-mario.y
             if max(dx**2,dy**2)<=(mario.mario_img.get_width()/2)**2  :
@@ -659,5 +659,5 @@ while  run:
         game__over()
         pygame.display.flip()
 
-    if score > best_score:
-        best_score = score    
+    if score > best_score: #on garde le meilleur score de toutes les parties jouées
+        best_score = score  
