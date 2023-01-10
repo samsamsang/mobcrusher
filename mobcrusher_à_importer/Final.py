@@ -196,11 +196,11 @@ class mob_rat(): ##définition des rats
             if self.vy>0:
                 self.vy=0
     def _follow(self,t): #à la poursuite de Maria
-        if self.x-mario.x<-1:
+        if self.x-mario.x<-3:
             if self.r==False:
                 self.mobc_img=pygame.transform.flip(self.mobc_img,1,0)
                 self.r=True
-            if self.vx<1:
+            if self.vx<3:
                 self.vx+=1
         if self.x-mario.x>5:
             if self.r==True:
